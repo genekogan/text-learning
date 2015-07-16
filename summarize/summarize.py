@@ -1,22 +1,32 @@
 from __future__ import absolute_import
 from __future__ import division, print_function, unicode_literals
-
 from sumy.parsers.html import HtmlParser
 from sumy.parsers.plaintext import PlaintextParser
 from sumy.nlp.tokenizers import Tokenizer
 from sumy.summarizers.lsa import LsaSummarizer as Summarizer
 from sumy.nlp.stemmers import Stemmer
 from sumy.utils import get_stop_words
+import argparse
 
-presidents = ['George Washington','John Adams','Thomas Jefferson','James Madison','James Monroe','John Quincy Adams','Andrew Jackson','Martin Van Buren','William H. Harrison','John Tyler','James K. Polk','Zachary Taylor','Millard Fillmore','Franklin Pierce','James Buchanan','Abraham Lincoln','Andrew Johnson','Ulysses S. Grant','Rutherford B. Hayes','James A. Garfield','Chester A. Arthur','Grover Cleveland','Benjamin Harrison','Grover Cleveland','William McKinley','Theodore Roosevelt','William Howard Taft','Woodrow Wilson','Warren G. Harding','Calvin Coolidge','Herbert Hoover','Franklin D. Roosevelt','Harry S Truman','Dwight D. Eisenhower','John F. Kennedy','Lyndon B. Johnson','Richard M. Nixon','Gerald R. Ford','Jimmy Carter','Ronald Reagan','George Bush','William J. Clinton','George W. Bush','Barack Obama']
-
-for p in reversed(presidents):
-	url = "https://en.wikipedia.org/wiki/"+p.replace(' ','_')
-	parser = HtmlParser.from_url(url, Tokenizer('english'))
-	stemmer = Stemmer('english')
+def main(url, num_sentences=10, language='english'):
+	parser = HtmlParser.from_url(url, Tokenizer(language))
+	stemmer = Stemmer(language)
 	summarizer = Summarizer(stemmer)
-	summarizer.stop_words = get_stop_words('english')
-	print(str(p)+'\n=====================')
-	print(summarizer(parser.document, 1))
-	print(str('\n'))
+	summarizer.stop_words = get_stop_words(language)
+	for sentence in summarizer(parser.document, num_sentences):
+		print(sentence)
+	
 
+if __name__ == "__main__":
+	parser = argparse.ArgumentParser(description='Summarize a URL')
+	parser.add_argument('-u','--url', help='url', required=True)	
+	parser.add_argument('-n','--num_sentences',help='Number of sentences. Default: 10', type=int, required=False)
+	parser.add_argument('-l','--language',help='Language. Default: english', required=False)
+	args = parser.parse_args()
+	nargs = len(vars(args))
+	if nargs == 4:
+		main(args.url, args.num_sentences, args.language)
+	elif nargs == 3:
+		main(args.url, args.num_sentences)
+	elif nargs == 2:
+		main(args.url)
