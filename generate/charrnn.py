@@ -25,7 +25,7 @@ parser.add_argument('--decay_rate',default=0.95, type=float, help='decay rate fo
 parser.add_argument('--dropout',default=0, type=float, help='dropout for regularization, used after each RNN hidden layer. 0 = no dropout')
 parser.add_argument('--seq_length',default=50, type=int, help='number of timesteps to unroll for')
 parser.add_argument('--step',default=None, type=int, help='number of steps between sequences, default to seq_length')
-parser.add_argument('--batch_size',default=50, type=int, help='number of sequences to train on in parallel')
+parser.add_argument('--batch_size',default=128, type=int, help='number of sequences to train on in parallel')
 parser.add_argument('--max_epochs',default=50, type=int, help='number of full passes through the training data')
 parser.add_argument('--nb_epochs',default=1, type=int, help='number of epochs per iteration')
 parser.add_argument('--grad_clip',default=5, type=float, help='clip gradients at this value')
@@ -50,6 +50,7 @@ print('step size is', args.step)
 np.random.seed(args.seed) # for reproducibility
 
 path = get_file('patriotAct.txt', origin="http://genekogan.com/txt/patriotAct.txt")
+#path = get_file('marquez.txt', origin="http://pauladaunt.com/books/MARQUES,%20Gabriel%20Garcia%20-%20One%20Hundred%20Years%20of%20Solitude.txt")
 text = open(path).read()#.lower()
 print('corpus length:', len(text))
 
@@ -109,6 +110,7 @@ def sample(a, temperature=1.0):
 
 # train the model, output generated text after each iteration
 for iteration in range(1, args.max_epochs):
+    bb = iteration
     print()
     print('-' * 50)
     print('Iteration', iteration)
@@ -127,7 +129,7 @@ for iteration in range(1, args.max_epochs):
         print('----- Generating with seed: "' + sentence + '"')
         sys.stdout.write(generated)
 
-        for iteration in range(800*iteration):
+        for iteration2 in range(600*bb):
             x = np.zeros((1, maxlen, len(chars)))
             for t, char in enumerate(sentence):
                 x[0, t, char_indices[char]] = 1.
