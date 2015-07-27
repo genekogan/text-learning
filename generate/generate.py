@@ -127,7 +127,7 @@ for iteration in range(1, args.max_epochs):
 			sys.stdout.flush()
 		
 		print()
-		generated_text_file.write('iteration '+str(iteration)+', diversity '+str(diversity)+', elapsed '+str(elapsed_time)+'\n\n')
+		generated_text_file.write('\n\n\niteration '+str(iteration)+', diversity '+str(diversity)+', elapsed '+str(elapsed_time)+'\n=================================================\n\n')
 		generated_text_file.write(generated+'\n')
 
 
