@@ -90,7 +90,7 @@ def sample(a, diversity=0.75):
             return i
 
 # train the model, output generated text after each iteration
-for iteration in range(1, args.max_epochs):
+for iteration in range(1, 1+args.max_epochs):
 	print()
 	print('-' * 50)
 	print('Iteration', iteration)
