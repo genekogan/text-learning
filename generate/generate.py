@@ -111,7 +111,7 @@ for iteration in range(1, args.max_epochs):
 		print('----- Generating with seed: "' + sentence + '"')
 		sys.stdout.write(generated)
 
-		for iteration2 in range(400):
+		for iteration2 in range(400 * iteration ):
 			x = np.zeros((1, maxlen, len(chars)))
 			for t, char in enumerate(sentence):
 				x[0, t, char_indices[char]] = 1.
@@ -129,6 +129,6 @@ for iteration in range(1, args.max_epochs):
 		print()
 		generated_text_file.write('\n\n\niteration '+str(iteration)+', diversity '+str(diversity)+', elapsed '+str(elapsed_time)+'\n=================================================\n\n')
 		generated_text_file.write(generated+'\n')
-
+		generated_text_file.flush()
 
 generated_text_file.close()
