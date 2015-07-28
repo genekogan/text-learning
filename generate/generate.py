@@ -8,6 +8,7 @@ import numpy as np
 import random, sys
 import time
 import argparse
+import cPickle
 
 '''
 	LSTM text generation
@@ -130,5 +131,8 @@ for iteration in range(1, 1+args.max_epochs):
 		generated_text_file.write('\n\n\niteration '+str(iteration)+', diversity '+str(diversity)+', elapsed '+str(elapsed_time)+'\n=================================================\n\n')
 		generated_text_file.write(generated+'\n')
 		generated_text_file.flush()
+		model_file = file('obj.save', 'wb')
+		cPickle.dump(model, model_file, protocol=cPickle.HIGHEST_PROTOCOL)
+		model_file.close()
 
 generated_text_file.close()

@@ -5,9 +5,9 @@ from nltk.tokenize import WhitespaceTokenizer
 import argparse
 
 parser = argparse.ArgumentParser(description='Perplexity-based pruning of generated text')
-parser.add_argument('--training_file', required=True, type=str, help='training file')
-parser.add_argument('--generated_file', required=True, type=str, help='testing file')
-parser.add_argument('--num_grams', default=4, type=str, help='num grams for estimator')
+parser.add_argument('--trainfile', required=True, type=str, help='training file')
+parser.add_argument('--testfile', required=True, type=str, help='testing file')
+parser.add_argument('--num_grams', default=4, type=int, help='num grams for estimator')
 parser.add_argument('--estimator_probability', default=0.2, type=float, help='Lidstone estimator probability')
 parser.add_argument('--cutoff_max_perplexity', default=20, type=float, help='running cutoff max perplexity')
 parser.add_argument('--output_max_perplexity', default=10, type=float, help='output max perplexity')
@@ -15,8 +15,8 @@ parser.add_argument('--min_sentence_length', default=8, type=int, help='min sent
 
 args = parser.parse_args()
 
-f_train = open(args.training_file)
-f_test = open(args.generated_file)
+f_train = open(args.trainfile)
+f_test = open(args.testfile)
 training_raw = f_train.read()
 testing_raw = f_test.read()
 
@@ -42,11 +42,11 @@ lm = NgramModel(args.num_grams, train, estimator=estimator)
 
 t0 = 0
 t1 = 1
-current_best=' '
+current_best=''
 while t1 < len(test):
 	perplexity = lm.perplexity(test[t0:t1])
 	if perplexity > args.cutoff_max_perplexity:
-		if (t1 - t0 > args.min_sentence_length):
+		if (len(current_best)>1):
 			print current_best+'.'
 			current_best=''
 		t0 = t1 + 1
