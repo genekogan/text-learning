@@ -99,7 +99,7 @@ for i in xrange(jump * n_epochs):
 
     if (i + 1) % bprop_len == 0:  # Run truncated BPTT
         now = time.time()
-        print '{}/{}, train_loss = {}, time = {:.2f}'.format((i+1)/bprop_len, jump, accum_loss.data / bprop_len, now-cur_at)
+        print '{}/{}, train_loss = {}, time = {:.2f}'.format((i+1)/bprop_len, jump * n_epochs, accum_loss.data / bprop_len, now-cur_at)
         cur_at = now
 
         optimizer.zero_grads()
@@ -113,7 +113,7 @@ for i in xrange(jump * n_epochs):
         optimizer.clip_grads(grad_clip)
         optimizer.update()
 
-    if (i + 1) % 10000 == 0:
+    if (i + 1) % 100000 == 0:
         fn = ('%s/charrnn_epoch_%.2f.chainermodel' % (args.checkpoint_dir, float(i)/jump))
         pickle.dump(copy.deepcopy(model).to_cpu(), open(fn, 'wb'))
 
